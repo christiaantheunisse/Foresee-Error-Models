@@ -195,6 +195,9 @@ class ErrorModelWithStdScaleFunc(ErrorModel):
         mean, std = self.mean_interpolator(xs), self.std_interpolator(xs)
         std *= self.std_scale_func(**kwargs)
         return mean, std
+    
+    def plot(self) -> None:
+        raise NotImplementedError("Not implemented for the error model with scale function.")
 
 def plot_error_model_2D(error_model) -> None:
     fig, axs = plt.subplots(1, 2, layout="constrained", figsize=(9, 3))
