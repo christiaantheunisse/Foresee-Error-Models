@@ -495,6 +495,7 @@ def plot_distribution_2D(
     x2_data = x_data[:, 1]
     ax.scatter(x1_data, x2_data, y_data, color="k", s=3, marker="*", zorder=-10)
 
+    z_score = 1
     if x_test is not None:
         x1_test = x_test[..., 0]
         x2_test = x_test[..., 1]
@@ -503,15 +504,15 @@ def plot_distribution_2D(
             ax.plot_surface(
                 x1_test, x2_test, mean_transformed, rstride=3, cstride=3, linewidth=2, antialiased=False, cmap="viridis"
             )
-            ax.plot_surface(x1_test, x2_test, np.exp(mean - 2 * std), color="tab:blue", alpha=0.4)
-            ax.plot_surface(x1_test, x2_test, np.exp(mean + 2 * std), color="tab:blue", alpha=0.4)
+            ax.plot_surface(x1_test, x2_test, np.exp(mean - z_score * std), color="tab:blue", alpha=0.4)
+            ax.plot_surface(x1_test, x2_test, np.exp(mean + z_score * std), color="tab:blue", alpha=0.4)
         else:
             mean_transformed = mean
             ax.plot_surface(
                 x1_test, x2_test, mean, rstride=3, cstride=3, linewidth=2, antialiased=False, cmap="viridis"
             )
-            ax.plot_surface(x1_test, x2_test, (mean - 2 * std), color="tab:blue", alpha=0.4)
-            ax.plot_surface(x1_test, x2_test, (mean + 2 * std), color="tab:blue", alpha=0.4)
+            ax.plot_surface(x1_test, x2_test, (mean - z_score * std), color="tab:blue", alpha=0.4)
+            ax.plot_surface(x1_test, x2_test, (mean + z_score * std), color="tab:blue", alpha=0.4)
         # ax.contourf(x1_test, x2_test, mean_transformed, zdir="z", offset=-2, cmap="viridis")
         # _, zlim_high = ax.get_zlim()
         # ax.set_zlim(mean_transformed.min() - 2, zlim_high)
