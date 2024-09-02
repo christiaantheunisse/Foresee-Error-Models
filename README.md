@@ -27,8 +27,10 @@ A Lidar measurement consists of a list of angles and the range measured at each 
 To visualize the data and fit a GP, run the code in `lidar/range_error/range_error.ipynb`.
 
 <p float="left">
-    <img src="lidar/range_error/range_error_data.png" style="max-height: 350px; height:auto; width:auto;">
-    <img src="lidar/range_error/range_error_gp.png" style="max-height: 350px; height:auto; width:auto;">
+    <!-- <img src="lidar/range_error/range_error_data.png" style="max-height: 350px; height:auto; width:auto;">
+    <img src="lidar/range_error/range_error_gp.png" style="max-height: 350px; height:auto; width:auto;"> -->
+    <img src="lidar/range_error/range_error_data.png" width="54.94%">
+    <img src="lidar/range_error/range_error_gp.png" width="44.06%">
 </p>
 
 ### Angle error
@@ -36,8 +38,10 @@ To visualize the data and fit a GP, run the code in `lidar/range_error/range_err
 
 To visualize the data and fit a GP, run the code in `lidar/angle_error/angle_error.ipynb`.
 <p float="left">
-    <img src="lidar/angle_error/angle_error_data.png" style="max-height: 350px; height:auto; width:auto;">
-    <img src="lidar/angle_error/angle_error_gp.png" style="max-height: 350px; height:auto; width:auto;">
+    <!-- <img src="lidar/angle_error/angle_error_data.png" style="max-height: 350px; height:auto; width:auto;">
+    <img src="lidar/angle_error/angle_error_gp.png" style="max-height: 350px; height:auto; width:auto;"> -->
+    <img src="lidar/angle_error/angle_error_data.png" width="57.78%">
+    <img src="lidar/angle_error/angle_error_gp.png" width="41.22%">
 </p>
 
 ## Trajectory following
@@ -107,8 +111,10 @@ The traversal times for the four compared algorithms are. T-tests indicate that 
 The traversal times for the normal traffic scenarios in the ablation study. The Tukey's HSD test indicates that `foresee abl. FOV` and `Lidar` are significantly less cautious than `foresee abl. delay` and `traj`. This leads to the conclusion that the errors in the field of view (FOV) and Lidar contribute the most to the increased cautiousness. 
 
 <p float="left">
-    <img src="experiments/ablation_normal_traffic_scenarios/abl_normal_traversal_times.png" style="max-height: 350px; height:auto; width:auto;">
-    <img src="experiments/ablation_normal_traffic_scenarios/ablated_algorithms_tukey_hsd.png" style="max-height: 350px; height:auto; width:auto;">
+    <!-- <img src="experiments/ablation_normal_traffic_scenarios/abl_normal_traversal_times.png" style="max-height: 350px; height:auto; width:auto;">
+    <img src="experiments/ablation_normal_traffic_scenarios/ablated_algorithms_tukey_hsd.png" style="max-height: 350px; height:auto; width:auto;"> -->
+    <img src="experiments/ablation_normal_traffic_scenarios/abl_normal_traversal_times.png" width="42.09%">
+    <img src="experiments/ablation_normal_traffic_scenarios/ablated_algorithms_tukey_hsd.png" width="56.91%">
 </p>
 
 ## Horizon lengths
