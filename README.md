@@ -1,5 +1,12 @@
 # Foresee-Error-Models
-This repo contains all the data and code to generate the error models for the [paper](). 
+This repo contains all the data and code to generate the error models discussed in *[Evaluating Set-based Occlusion Planners in Traffic Scenarios with Perception Uncertainties](paper.pdf)*. Besides, the data and code to generate the plots for the experiment section are also included. The abstract of the paper is:
+
+> To ensure safely operation of autonomous vehicles (AVs), trajectory planners should account for occlusions. These are areas invisible to the AV that might contain vehicles. Set- based methods can guarantee safety by calculating the reachable set, which is the set of possible states, for each potentially hidden vehicle. A recently published method proved in simulation experiments to reduce the cautiousness by reasoning about these occluded areas over time, assuming perfect input data [[1]](https://ieeexplore.ieee.org/abstract/document/9827171/). We  present a novel algorithm that uses this reasoning and is applicable on a real AV with its accompanying uncertainties and imperfect sensor data. The uncertainties include sensor errors and noise, computation and communication delays and control errors in the trajectory following. This is achieved by modelling the error distributions and accounting for them in the calculations, where the confidence interval for each error is exposed as a setting. Experiments indicate that our algorithm can reduce the traversal time through an intersection by 2.2 seconds with reasoning. An ablation study of the different error measures shows that the errors in the construction of the field of view (FOV) limit the performance the most. Reducing the errors in the FOV construction is therefore our the most important recommendation, besides making the method interaction-aware.
+
+
+[1] : Sánchez, J. M. G., Nyberg, T., Pek, C., Tumova, J., & Törngren, M. (2022, June). Foresee the unseen: Sequential reasoning about hidden obstacles for safe driving. In 2022 IEEE Intelligent Vehicles Symposium (IV) (pp. 255-264). IEEE. [link](https://ieeexplore.ieee.org/abstract/document/9827171/)
+
+# Error models
 
 ## Gaussian Process
 
@@ -9,7 +16,7 @@ Gaussian Processes (GPs) are used for the error models because of the following 
 - Modelling of the epistemic uncertainty (model uncertainty), so basically overapproximating the error variance.
 - Hyperparameters can be optimized with log-likelihood maximization (instead of the model itself like NNs).
 
-Since online inference on Gaussian Processes is too costly, the models is sampled over a grid of 1000 steps for each parameter dimension. The values on this grid are linearly interpolated online.
+Since online inference on Gaussian Processes is too time consuming, a lookup table is generated that is linearly interpolated.
 
 ## Lidar
 A Lidar measurement consists of a list of angles and the range measured at each angle. Two models are generated: one for the distribution of the error in the ranges and one for the angles. Both models depend on the measured range and inclination angle. Furthermore, the maximum inclination angle is determined from these angles.
@@ -48,11 +55,15 @@ In the below plot the data is plotted against the errors and Gaussian Processes 
 
 ### Longitudinal error
 
+The time derivative of the longitudinal error is modelled, i.e. the longitudinal error rate, because the trajectory follower tracks the velocity. It is therefore better to measure the velocity error. The `VelAcc` dataset is used for the error model.
 
 ### Lateral error
 
+The acceleration data is unreliable for the lateral error, because the test trajectories always start with a positive acceleration and lateral error of zero, resulting in a low lateral error for positive accelerations. Consequently, the `VelCurv` dataset is for the GP fit.
+
 ### Orientation error
 
+The orientation error model also depends on the `VelCurv` dataset, because the correlation with the curvature is much stronger than with the orientation.
 
 
 ## Velocity error
@@ -79,3 +90,29 @@ The noise covariance matrix Q of the EKF filter has to be properly tuned to ensu
 In the [paper](#) it is argued that the fact that the SLAM pose is imperfect, makes the EKF **position** estimate appear worse. This is especially true when the uncertainty of the SLAM pose is relatively big compared to the EKF uncertainty, which is the case for small SLAM update intervals. This point supported by the plots for the position error.
 
 <img src="pose_estimation_error/pose_estimation_proportions_plot.png" style="max-width: 800px; height:auto; width:auto;">
+
+# Experiments
+
+More information about the robot and software used in the experiments can be found in the [paper](paper.pdf) and on [this GitHub with the mobile robot software](https://github.com/christiaantheunisse/Foresee-the-Unseen-ROS).
+
+
+## Performance experiments: normal traffic scenarios
+
+The traversal times for the four compared algorithms are. T-tests indicate that the traversal time improvement is significant for all scenarios for `foresee vs. baseline` and for `foresee++ vs. baseline++` for the scenarios 2, 3 and 6. A two-way ANOVA showed that the error models significantly increased the traversal time for both `baseline vs. baseline++` and `foresee and foresee++`.
+
+<img src="experiments/performance_normal_traffic_scenarios/perf_normal_traversal_times.png" style="max-height: 350px; height:auto; width:auto;">
+
+## Ablation study: normal traffic scenarios
+
+The traversal times for the normal traffic scenarios in the ablation study. The Tukey's HSD test indicates that `foresee abl. FOV` and `Lidar` are significantly less cautious than `foresee abl. delay` and `traj`. This leads to the conclusion that the errors in the field of view (FOV) and Lidar contribute the most to the increased cautiousness. 
+
+<p float="left">
+    <img src="experiments/ablation_normal_traffic_scenarios/abl_normal_traversal_times.png" style="max-height: 350px; height:auto; width:auto;">
+    <img src="experiments/ablation_normal_traffic_scenarios/ablated_algorithms_tukey_hsd.png" style="max-height: 350px; height:auto; width:auto;">
+</p>
+
+## Horizon lengths
+
+This experiments shows that a longer time horizon results in a bigger traversal time, because the method is not interaction-aware. For a horizon of 30, the mobile robot cannot even cross the intersection because it collides with possible hidden obstacles at the boundary of the maximum field of view.
+
+<img src="experiments/horizon_length/horizons_vs_traversal_times.png" style="max-height: 350px; height:auto; width:auto;">
